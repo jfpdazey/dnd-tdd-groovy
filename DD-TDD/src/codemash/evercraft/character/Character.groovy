@@ -13,7 +13,14 @@ class Character {
 	}
 	
 	boolean attack(Character attackee, int roll) {
-		true
+		if (!validRoll(roll)) {
+			throw new IllegalArgumentException("Invalid roll of ${roll} - Please pass a number 1 to 20")
+		} 
+		return (roll >= attackee.armorClass)
+	}
+	
+	boolean validRoll(int roll) {
+		return (roll > 0 && roll < 21)		
 	}
 		
 }

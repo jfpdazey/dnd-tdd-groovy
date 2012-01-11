@@ -3,10 +3,11 @@ package codemash.evercraft.character;
 import spock.lang.*
 
 class CharacterTest extends Specification {
-	def character
+	def character, characterToAttack
 	
 	void setup() {
 		character = new Character("Joe")
+		characterToAttack = new Character("Bob")
 	}
 	
 	def "character has a name"() {
@@ -59,10 +60,35 @@ class CharacterTest extends Specification {
 			character.hitPoints == 5
 	}
 	
-	def "character can attack"() {
-		given:
-			def characterTwo = new Character("Bob")
+	def "character can attack and hit when the roll is equal to the opponents armor class"() {
 		expect:
-			character.attack(characterTwo, 10)
+			character.attack(characterToAttack, 10)
 	}
+
+	def "character's roll will hit when it is greater than opponents armor class"() {
+		expect:
+			character.attack(characterToAttack, 11)
+	}
+	
+	def "character's roll will miss when it is less than opponents armor class"() {
+		expect:
+			!character.attack(characterToAttack, 9)
+	}
+	
+	def "character's roll cannot be greater than 20"() {
+		when:
+			character.attack(characterToAttack, 21)
+		then:
+			thrown(IllegalArgumentException)
+	}
+	
+	def "character's roll cannot be less than 1"() {
+		when:
+			character.attack(characterToAttack, 0) 
+		then:
+			thrown(IllegalArgumentException)	
+	}
+	
+	
+	
 }

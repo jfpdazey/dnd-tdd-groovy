@@ -19,8 +19,6 @@ class Character {
 		return (roll >= attackee.armorClass)
 	}
 	
-	boolean validRoll(int roll) {
-		return (roll > 0 && roll < 21)		
-	}
+	
 		
 }

@@ -1,24 +1,25 @@
 package codemash.evercraft.character
 
 class Character {
-
-	def name, armorClass, hitPoints
-	Alignment alignment
+	def name
+	
+	int armorClass = 10, hitPoints = 5
+	Ability strength, dexterity, constitution, wisdom, intelligence, charisma
+	Alignment alignment = Alignment.NEUTRAL
 	
 	public Character(String aName) {
 		name = aName
-		armorClass = 10
-		hitPoints = 5
-		alignment = Alignment.NEUTRAL
+		strength = new Ability(AbilityName.STRENGTH)
+		dexterity = new Ability(AbilityName.DEXTERITY)
+		constitution = new Ability(AbilityName.CONSTITUTION)
+		wisdom = new Ability(AbilityName.WISDOM)
+		intelligence = new Ability(AbilityName.INTELLIGENCE)
+		charisma = new Ability(AbilityName.CHARISMA)
 	}
 	
-	boolean attack(Character attackee, int roll) {
-		if (!validRoll(roll)) {
-			throw new IllegalArgumentException("Invalid roll of ${roll} - Please pass a number 1 to 20")
-		} 
-		return (roll >= attackee.armorClass)
-	}
-	
-	
-		
+	private Character() {}
+
+	boolean isAlive() {
+		return hitPoints > 0
+	} 
 }

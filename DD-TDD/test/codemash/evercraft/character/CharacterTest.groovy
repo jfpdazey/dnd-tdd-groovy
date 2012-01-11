@@ -4,11 +4,11 @@ import spock.lang.*
 import codemash.evercraft.combat.*;
 
 class CharacterTest extends Specification {
-	def character, characterToAttack
+	def character, victim
 	
 	void setup() {
 		character = new Character("Joe")
-		characterToAttack = new Character("Bob")
+		victim = new Character("Bob")
 	}
 	
 	def "character has a name"() {
@@ -63,38 +63,73 @@ class CharacterTest extends Specification {
 	
 	def "character can attack and hit when the roll is equal to the opponents armor class"() {
 		expect:
-			Combat.attack(character, characterToAttack, 10)
+			Combat.attack(character, victim, 10)
 	}
 
 	def "character's roll will hit when it is greater than opponents armor class"() {
 		expect:
-			Combat.attack(character, characterToAttack, 11)
+			Combat.attack(character, victim, 11)
 	}
 	
 	def "character's roll will miss when it is less than opponents armor class"() {
+		given:
+			def successful = Combat.attack(character, victim, 9)
 		expect:
-			!Combat.attack(character, characterToAttack, 9)
+			!successful
+			victim.hitPoints == 5
 	}
 	
 	def "character's roll cannot be greater than 20"() {
 		when:
-			Combat.attack(character, characterToAttack, 21)
+			Combat.attack(character, victim, 21)
 		then:
 			thrown(IllegalArgumentException)
 	}
 	
 	def "character's roll cannot be less than 1"() {
 		when:
-			Combat.attack(character, characterToAttack, 0)
+			Combat.attack(character, victim, 0)
 		then:
 			thrown(IllegalArgumentException)	
 	}
 	
 	def "a successful attack will reduce attackee's hit points by 1"() {
 		when:
-			Combat.attack(character, characterToAttack, 19)
+			Combat.attack(character, victim, 19)
 		then:
-			characterToAttack.hitPoints == 4
+			victim.hitPoints == 4
 	}
 	
+	def "an attack with a natural 20 does double damage"() {
+		when:
+			Combat.attack(character, victim, 20)
+		then:
+			victim.hitPoints == 3
+	}
+	
+	def "when a character's hit points are 0 or less then they are not alive"() {
+		when:
+			victim.hitPoints = 0
+		then:
+			!victim.isAlive()	
+	}
+	
+	def "when a character is created, they are alive by default"() {
+		expect:
+			victim.isAlive()
+	}
+	
+	def "a character's abilities default to 10"() {
+		expect:
+			character.strength.score == 10
+			character.dexterity.score == 10
+			character.constitution.score == 10
+			character.wisdom.score == 10
+			character.intelligence.score == 10
+			character.charisma.score == 10
+	}
+	
+//	def "a character's abilities range from cannot be higher than 20"() {
+//		
+//	}
 }

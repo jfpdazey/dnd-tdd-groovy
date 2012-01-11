@@ -58,4 +58,11 @@ class CharacterTest extends Specification {
 		expect:
 			character.hitPoints == 5
 	}
+	
+	def "character can attack"() {
+		given:
+			def characterTwo = new Character("Bob")
+		expect:
+			character.attack(characterTwo, 10)
+	}
 }

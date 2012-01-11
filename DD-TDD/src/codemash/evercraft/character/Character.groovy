@@ -11,5 +11,9 @@ class Character {
 		hitPoints = 5
 		alignment = Alignment.NEUTRAL
 	}
+	
+	boolean attack(Character attackee, int roll) {
+		true
+	}
 		
 }

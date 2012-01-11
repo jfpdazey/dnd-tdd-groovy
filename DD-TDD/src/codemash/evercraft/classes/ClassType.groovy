@@ -1,7 +1,7 @@
 package codemash.evercraft.classes
 
 enum ClassType {
-	FIGHTER, DEFAULT
+	FIGHTER, PEASANT
 	
 	def hitPointsPerLevel() {
 		switch (this) {

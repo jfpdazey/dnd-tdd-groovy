@@ -18,7 +18,7 @@ class Character {
 		wisdom = new Ability(AbilityName.WISDOM)
 		intelligence = new Ability(AbilityName.INTELLIGENCE)
 		charisma = new Ability(AbilityName.CHARISMA)
-		classType = ClassType.DEFAULT;
+		classType = ClassType.PEASANT;
 	}
 	
 	public Character(String aName, ClassType myClassType) {

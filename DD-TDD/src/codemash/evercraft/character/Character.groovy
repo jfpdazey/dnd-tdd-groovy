@@ -3,7 +3,7 @@ package codemash.evercraft.character
 class Character {
 	def name
 	
-	int armorClass = 10, hitPoints = 5
+	int armorClass = 10, hitPoints = 5, damage = 0, experiencePoints = 0, level = 1
 	Ability strength, dexterity, constitution, wisdom, intelligence, charisma
 	Alignment alignment = Alignment.NEUTRAL
 	
@@ -20,6 +20,14 @@ class Character {
 	private Character() {}
 
 	boolean isAlive() {
-		return hitPoints > 0
+		return getHitPoints() > damage
+	}
+	
+	int getHitPoints() {
+		return Math.max((hitPoints + constitution.modifier) * getLevel(), getLevel())
+	}
+	
+	int getLevel() {
+		return Math.floor(experiencePoints / 1000) + 1
 	} 
 }

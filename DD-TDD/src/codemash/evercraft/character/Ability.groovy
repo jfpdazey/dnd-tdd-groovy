@@ -25,7 +25,6 @@ class Ability {
 	private boolean validScore(int score) {
 		return (scoreRange.contains(score))
 	}
-	
 }
 
 enum AbilityName {

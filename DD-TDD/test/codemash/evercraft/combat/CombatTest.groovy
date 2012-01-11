@@ -26,14 +26,14 @@ class CombatTest extends Specification {
 			def successful = Combat.attack(character, victim, 9)
 		expect:
 			!successful
-			victim.hitPoints == 5
+			victim.damage == 0
 	}
 	
 	def "an attack with a natural 1 will miss"() {
 		given:
 			victim.armorClass = 1
 		expect:
-			!Combat.attack(character, victim, 1)
+			!Combat.attack(character, victim, Combat.CRITICAL_MISS)
 	}
 	
 	def "character's roll cannot be greater than 20"() {
@@ -50,18 +50,18 @@ class CombatTest extends Specification {
 			thrown(IllegalArgumentException)
 	}
 	
-	def "a successful attack will reduce attackee's hit points by 1"() {
+	def "a successful attack will increase attackee's damage by 1"() {
 		when:
 			Combat.attack(character, victim, 19)
 		then:
-			victim.hitPoints == 4
+			victim.damage == 1
 	}
 	
 	def "an attack with a natural 20 does double damage"() {
 		when:
-			Combat.attack(character, victim, 20)
+			Combat.attack(character, victim, Combat.CRITICAL_HIT)
 		then:
-			victim.hitPoints == 3
+			victim.damage == 2
 	}
 	
 	def "a natural 1 will miss despite any strength modifiers applied"() {
@@ -69,29 +69,103 @@ class CombatTest extends Specification {
 			victim.armorClass = 1
 			character.strength.score = 20
 		expect:
-			!Combat.attack(character, victim, 1)
+			!Combat.attack(character, victim, Combat.CRITICAL_MISS)
 	}
 	
-	def "an attack roll of 8 will hit if the strength modifier is 2"() {
+	def "an attack roll of 8 will hit if the strength modifier is +2"() {
 		given:
 			character.strength.score = 14
 		expect:
 			Combat.attack(character, victim, 8)
 	}
 	
-	def "an attack roll of 7 will miss if the strength modifier is 2"() {
+	def "an attack roll of 7 will miss if the strength modifier is +2"() {
 		given:
 			character.strength.score = 14
 		expect:
 			!Combat.attack(character, victim, 7)
 	}
 	
-	def "2 points of damage will be added with a strength modifier of 2"() {
+	def "an attack roll of 12 will miss if the strength modifier is -3"() {
+		given:
+			character.strength.score = 5
+		expect:
+			!Combat.attack(character, victim, 12)
+	}
+	
+	def "an attack roll of 13 will hit if the strength modifier is -3"() {
+		given:
+			character.strength.score = 4
+		expect:
+			Combat.attack(character, victim, 13)
+	}
+	
+	def "2 points of damage will be added to the base damage with a strength modifier of +2"() {
 		given:
 			character.strength.score = 15
 		when:
 			Combat.attack(character, victim, 8)
 		then:
-			victim.hitPoints == 2
+			victim.damage == 3
+	}
+	
+	def "1 point of damage will still be dealt even with a strength modifier of -5"() {
+		given:
+			character.strength.score = 1
+		when:
+			Combat.attack(character, victim, 15)
+		then:
+			victim.damage == 1
+	}
+	
+	def "4 points of damage will be dealt with a strength modifier of +1 and a critical hit"() {
+		given:
+			character.strength.score = 12
+		when:
+			Combat.attack(character, victim, Combat.CRITICAL_HIT)
+		then:
+			victim.damage == 4
+	}
+
+	def "1 point of damage will be dealt with a strength modifier of -5 and a critical hit"() {
+		given:
+			character.strength.score = 1
+		when:
+			Combat.attack(character, victim, Combat.CRITICAL_HIT)
+		then:
+			victim.damage == 1
+	}
+	
+	def "a positive dexterity modifier will make it harder to hit the victim"() {
+		given:
+			victim.dexterity.score = 12
+		expect:
+			!Combat.attack(character, victim, 10)
+	}
+	
+	def "a negative dexterity modifier will make it easier to hit the victim"() {
+	    given:
+			victim.dexterity.score = 9
+		expect:
+			Combat.attack(character, victim, 9)
+	}
+	
+	def "a successful attack will increase the attackers XP by 10 points"() {
+		when:
+			Combat.attack(character, victim, 10)
+		then:
+			character.experiencePoints == 10
+	}
+	
+	def "a failed attack will not increase the attackers XP"() {
+		when:
+			Combat.attack(character, victim, 1)
+		then:
+			character.experiencePoints == 0
+	}
+	
+	def "a character starts at level 1"() {
+		expect:
+			character.level == 1
 	}
 }

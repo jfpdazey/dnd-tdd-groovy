@@ -3,7 +3,7 @@ package codemash.evercraft.character
 class Character {
 	def name
 	
-	int armorClass = 10, hitPoints = 5, damage = 0, experiencePoints = 0, level = 1, attackAdjustment = 1
+	int armorClass = 10, hitPoints = 5, damage = 0, experiencePoints = 0, level = 1, attackAdjustment = 0
 	Ability strength, dexterity, constitution, wisdom, intelligence, charisma
 	Alignment alignment = Alignment.NEUTRAL
 	
@@ -31,5 +31,8 @@ class Character {
 		return Math.floor(experiencePoints / 1000) + 1
 	}
 	
+	int getAttackAdjustment() {
+		return Math.floor(getLevel() / 2)
+	}
 	
 }

@@ -164,8 +164,24 @@ class CombatTest extends Specification {
 			character.experiencePoints == 0
 	}
 	
-	def "a character starts at level 1"() {
+	def "a level 2 character can hit with a lower roll"() {
+		given:
+			character.experiencePoints = 1000
 		expect:
-			character.level == 1
+			Combat.attack(character, victim, 9)
+	}
+	
+	def "a level 3 character can hit with the same roll as a level 2"() {
+		given:
+			character.experiencePoints = 1000
+		expect:
+			Combat.attack(character, victim, 9)
+	}
+	
+	def "a level 3 character cannot hit with a lower roll than a level 2 character"() {
+		given:
+			character.experiencePoints = 2000
+		expect:
+			!Combat.attack(character, victim, 8)
 	}
 }

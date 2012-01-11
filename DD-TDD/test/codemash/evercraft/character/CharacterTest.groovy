@@ -190,4 +190,18 @@ class CharacterTest extends Specification {
 		then:
 			character.attackAdjustment == 1
 	}
+	
+	def "a level 1 character gets no attack roll adjustment"() {
+		expect:
+			character.attackAdjustment == 0
+	}
+	
+	def "a character gets +1 bonus for attack rolls every even level"() {
+		when:
+			character.experiencePoints = 4000
+		then:
+			character.attackAdjustment == 2
+	}
+	
+	
 }

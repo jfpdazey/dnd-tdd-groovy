@@ -4,11 +4,10 @@ import spock.lang.*
 import codemash.evercraft.combat.*;
 
 class CharacterTest extends Specification {
-	def character, victim
+	def character
 	
 	void setup() {
 		character = new Character("Joe")
-		victim = new Character("Bob")
 	}
 	
 	def "character has a name"() {
@@ -61,69 +60,16 @@ class CharacterTest extends Specification {
 			character.hitPoints == 5
 	}
 	
-	def "character can attack and hit when the roll is equal to the opponents armor class"() {
-		expect:
-			Combat.attack(character, victim, 10)
-	}
-
-	def "character's roll will hit when it is greater than opponents armor class"() {
-		expect:
-			Combat.attack(character, victim, 11)
-	}
-	
-	def "character's roll will miss when it is less than opponents armor class"() {
-		given:
-			def successful = Combat.attack(character, victim, 9)
-		expect:
-			!successful
-			victim.hitPoints == 5
-	}
-	
-	def "an attack with a natural 1 will miss"() {
-		given:
-			victim.armorClass = 1
-		expect:
-			!Combat.attack(character, victim, 1)	
-	}
-	
-	def "character's roll cannot be greater than 20"() {
-		when:
-			Combat.attack(character, victim, 21)
-		then:
-			thrown(IllegalArgumentException)
-	}
-	
-	def "character's roll cannot be less than 1"() {
-		when:
-			Combat.attack(character, victim, 0)
-		then:
-			thrown(IllegalArgumentException)	
-	}
-	
-	def "a successful attack will reduce attackee's hit points by 1"() {
-		when:
-			Combat.attack(character, victim, 19)
-		then:
-			victim.hitPoints == 4
-	}
-	
-	def "an attack with a natural 20 does double damage"() {
-		when:
-			Combat.attack(character, victim, 20)
-		then:
-			victim.hitPoints == 3
-	}
-	
 	def "when a character's hit points are 0 or less then they are not alive"() {
 		when:
-			victim.hitPoints = 0
+			character.hitPoints = 0
 		then:
-			!victim.isAlive()	
+			!character.isAlive()	
 	}
 	
 	def "when a character is created, they are alive by default"() {
 		expect:
-			victim.isAlive()
+			character.isAlive()
 	}
 	
 	def "a character's abilities default to 10"() {

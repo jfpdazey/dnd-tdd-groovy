@@ -79,6 +79,13 @@ class CharacterTest extends Specification {
 			victim.hitPoints == 5
 	}
 	
+	def "an attack with a natural 1 will miss"() {
+		given:
+			victim.armorClass = 1
+		expect:
+			!Combat.attack(character, victim, 1)	
+	}
+	
 	def "character's roll cannot be greater than 20"() {
 		when:
 			Combat.attack(character, victim, 21)
@@ -128,8 +135,4 @@ class CharacterTest extends Specification {
 			character.intelligence.score == 10
 			character.charisma.score == 10
 	}
-	
-//	def "a character's abilities range from cannot be higher than 20"() {
-//		
-//	}
 }

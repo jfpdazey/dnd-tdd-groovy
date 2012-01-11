@@ -10,15 +10,17 @@ class Combat {
 			throw new IllegalArgumentException("Invalid roll of ${roll} - Please pass a number 1 to 20")
 		}
 		
-		if (hit (victim, roll)) {
-			applyDamage(victim, roll)
+		if (hit (attacker, victim, roll)) {
+			applyDamage(attacker, victim, roll)
 			true
 		} else {
 			false
 		}
 	}
 
-	private static applyDamage(Character victim, int roll) {
+	private static applyDamage(Character attacker, Character victim, int roll) {
+		victim.hitPoints -= attacker.strength.modifier;
+		
 		if (roll == 20) {
 			victim.hitPoints--
 		}
@@ -29,7 +31,9 @@ class Combat {
 		return (rollRange.contains(roll))
 	}
 	
-	private static boolean hit(Character victim, int roll) {
-		return (roll > 1 && roll >= victim.armorClass)
+	private static boolean hit(Character attacker, Character victim, int roll) {
+		int attackValue = roll + attacker.strength.modifier
+		
+		return (roll > 1 && attackValue >= victim.armorClass)
 	}
 }

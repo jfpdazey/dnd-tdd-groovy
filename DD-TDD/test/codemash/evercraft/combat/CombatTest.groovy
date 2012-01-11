@@ -63,4 +63,35 @@ class CombatTest extends Specification {
 		then:
 			victim.hitPoints == 3
 	}
+	
+	def "a natural 1 will miss despite any strength modifiers applied"() {
+		given:
+			victim.armorClass = 1
+			character.strength.score = 20
+		expect:
+			!Combat.attack(character, victim, 1)
+	}
+	
+	def "an attack roll of 8 will hit if the strength modifier is 2"() {
+		given:
+			character.strength.score = 14
+		expect:
+			Combat.attack(character, victim, 8)
+	}
+	
+	def "an attack roll of 7 will miss if the strength modifier is 2"() {
+		given:
+			character.strength.score = 14
+		expect:
+			!Combat.attack(character, victim, 7)
+	}
+	
+	def "2 points of damage will be added with a strength modifier of 2"() {
+		given:
+			character.strength.score = 15
+		when:
+			Combat.attack(character, victim, 8)
+		then:
+			victim.hitPoints == 2
+	}
 }

@@ -183,4 +183,11 @@ class CharacterTest extends Specification {
 		then:
 			character.hitPoints == 2
 	}
+	
+	def "a level 2 character gets +1 to their attack rolls"() {
+		when:
+			character.experiencePoints = 1000
+		then:
+			character.attackAdjustment == 1
+	}
 }

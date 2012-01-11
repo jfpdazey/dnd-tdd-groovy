@@ -1,11 +1,14 @@
 package codemash.evercraft.character
 
+import codemash.evercraft.classes.*
+
 class Character {
 	def name
 	
-	int armorClass = 10, hitPoints = 5, damage = 0, experiencePoints = 0, level = 1, attackAdjustment = 0
+	int armorClass = 10, damage = 0, experiencePoints = 0, level = 1, attackAdjustment = 0
 	Ability strength, dexterity, constitution, wisdom, intelligence, charisma
 	Alignment alignment = Alignment.NEUTRAL
+	ClassType classType
 	
 	public Character(String aName) {
 		name = aName
@@ -15,6 +18,12 @@ class Character {
 		wisdom = new Ability(AbilityName.WISDOM)
 		intelligence = new Ability(AbilityName.INTELLIGENCE)
 		charisma = new Ability(AbilityName.CHARISMA)
+		classType = ClassType.DEFAULT;
+	}
+	
+	public Character(String aName, ClassType myClassType) {
+		this(aName)
+		classType = myClassType
 	}
 	
 	private Character() {}
@@ -24,7 +33,7 @@ class Character {
 	}
 	
 	int getHitPoints() {
-		return Math.max((hitPoints + constitution.modifier) * getLevel(), getLevel())
+		return Math.max((classType.hitPointsPerLevel() + constitution.modifier) * getLevel(), getLevel())
 	}
 	
 	int getLevel() {
@@ -32,7 +41,7 @@ class Character {
 	}
 	
 	int getAttackAdjustment() {
-		return Math.floor(getLevel() / 2)
+		return classType.attackAdjustment(getLevel())
 	}
 	
 }

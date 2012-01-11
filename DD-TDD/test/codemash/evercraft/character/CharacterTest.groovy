@@ -2,6 +2,7 @@ package codemash.evercraft.character;
 
 import spock.lang.*
 import codemash.evercraft.combat.*;
+import codemash.evercraft.classes.*;
 
 class CharacterTest extends Specification {
 	def character
@@ -203,5 +204,15 @@ class CharacterTest extends Specification {
 			character.attackAdjustment == 2
 	}
 	
+	def "a character has a class"() {
+		expect:
+			character.classType != null
+	}
 	
+	def "a character's class must be of a accepted type"() {
+		given:
+			character = new Character("Billy", ClassType.FIGHTER)
+		expect:
+			character.classType.name() == "FIGHTER"
+	}
 }
